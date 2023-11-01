@@ -3,6 +3,8 @@ package com.br.sistemahospedagem.domain.quarto;
 import com.br.sistemahospedagem.domain.estacionamento.Estacionamento;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,12 +24,9 @@ public class Quarto {
     private int quartoId;
     private int qtLeitos;
     private int andar;
+    @Enumerated(EnumType.STRING)
     private CamaTipo camaTipo;
     private boolean possuiArCondicionado;
     private Double valorDiaria;
-
-    @OneToOne
-    @JoinColumn(name = "estacionamentoId")
-    private Estacionamento estacionamento;
 
 }
