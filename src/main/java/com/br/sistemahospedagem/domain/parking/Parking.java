@@ -1,4 +1,4 @@
-package com.br.sistemahospedagem.domain.estacionamento;
+package com.br.sistemahospedagem.domain.parking;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,20 +8,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "tabela-estacionamento")
+@Entity(name = "parkings_table")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Estacionamento {
+public class Parking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int vagasCarros = 30;
-    private int totalVagas = 39;
+    private int carSpaces = 30;
+    private int totalSpaces = 39;
     private Double valorDiaria = 20.0;
-    private int vagasVan = 5;
-    private int vagasMicro = 3;
-    private int vagasOnibus = 1;
+    private int vanSpaces = 5;
+    private int microSpaces = 3;
+    private int busSpace = 1;
    
 }

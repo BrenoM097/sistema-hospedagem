@@ -1,32 +1,30 @@
-package com.br.sistemahospedagem.domain.quarto;
+package com.br.sistemahospedagem.domain.room;
 
-import com.br.sistemahospedagem.domain.estacionamento.Estacionamento;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "tabela-quartos")
+@Entity(name = "rooms_table")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Quarto {
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int quartoId;
-    private int qtLeitos;
-    private int andar;
+    @Column(name = "room_id")
+    private int roomId;
+    private int adults;
+    private int floor;
     @Enumerated(EnumType.STRING)
-    private CamaTipo camaTipo;
-    private boolean possuiArCondicionado;
-    private Double valorDiaria;
+    private BedType bedType;
+    private boolean haveArConditioner;
+    private Double dailyValor;
 
 }
