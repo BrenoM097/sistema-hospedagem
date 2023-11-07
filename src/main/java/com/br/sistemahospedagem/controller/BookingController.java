@@ -1,7 +1,7 @@
 package com.br.sistemahospedagem.controller;
 
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import com.br.sistemahospedagem.repositories.BookingRepository;
 import com.br.sistemahospedagem.service.BookingService;
 
 @RestController
-@RequestMapping("/bookings")
+@RequestMapping("/hotel")
 public class BookingController {
     @Autowired
     BookingService clienteService;
@@ -25,14 +25,14 @@ public class BookingController {
     @Autowired
     BookingRepository bookingRepository;
     
-    @PostMapping
+    @PostMapping("/createBooking")
     public ResponseEntity<Booking> reserve(@RequestBody BookingDTO booking) {
         Booking newBooking = clienteService.reserve(booking);  
         return new ResponseEntity<>(newBooking, HttpStatus.CREATED);
     }
 
     @GetMapping("/date")
-    public ResponseEntity<List<Booking>> reserveInBetween(LocalDateTime dataInicio, LocalDateTime dataFim) {
+    public ResponseEntity<List<Booking>> reserveInBetween(LocalDate dataInicio, LocalDate dataFim) {
         List<Booking> bookingBetweenDates = bookingRepository.findBookingsByDates(dataInicio, dataFim);
         return new ResponseEntity<>(bookingBetweenDates, HttpStatus.CREATED);
     }

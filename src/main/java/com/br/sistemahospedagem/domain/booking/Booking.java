@@ -1,6 +1,6 @@
 package com.br.sistemahospedagem.domain.booking;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import com.br.sistemahospedagem.domain.room.Room;
 import com.br.sistemahospedagem.dtos.BookingDTO;
 import jakarta.persistence.Column;
@@ -35,9 +35,9 @@ public class Booking {
     private String cpf;
 
     @Column(name = "checkIn")
-    private LocalDateTime checkIn;
+    private LocalDate checkIn;
     @Column(name = "checkOut")
-    private LocalDateTime checkOut;
+    private LocalDate checkOut;
     @Column(name = "parkingLot")
     private boolean parkingLot;
     
