@@ -15,10 +15,18 @@ import com.br.sistemahospedagem.domain.booking.Booking;
 import com.br.sistemahospedagem.dtos.BookingDTO;
 import com.br.sistemahospedagem.repositories.BookingRepository;
 import com.br.sistemahospedagem.service.BookingService;
+import com.br.sistemahospedagem.service.RoomService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/hotel")
 public class BookingController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
+
+    @Autowired
+    RoomService roomService;
+
     @Autowired
     BookingService clienteService;
 
@@ -27,6 +35,8 @@ public class BookingController {
     
     @PostMapping("/createBooking")
     public ResponseEntity<Booking> reserve(@RequestBody BookingDTO booking) {
+        LOGGER.info("Received booking request: {}", booking);
+
         Booking newBooking = clienteService.reserve(booking);  
         return new ResponseEntity<>(newBooking, HttpStatus.CREATED);
     }

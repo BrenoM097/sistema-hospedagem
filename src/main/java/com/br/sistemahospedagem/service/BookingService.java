@@ -16,24 +16,21 @@ public class BookingService {
     BookingRepository bookingRepository;
 
     public Booking reserve(BookingDTO booking) {
+        Room existingRoom = roomService.findRoomById(booking.getRoomId());
         Booking newReserva = new Booking(booking);
-        System.out.println(newReserva.getRoom().getId());
-        Room room = roomService.findRoomById(newReserva.getRoom().getId());
-        newReserva.setRoom(room);
-
+        newReserva.setRoom(existingRoom);
         this.saveReserve(newReserva);
-        return newReserva;
+            return newReserva;
     }
+
 
     public void saveReserve(Booking booking) {
         this.bookingRepository.save(booking);
     }
+
+
     public Double calcValor(Double value, int days) {
         return days * value;
-    }
-
-    public Double getDailyValue(Room room) {
-        return room.getDailyValor();
     }
 
     public int getTotalDays(Booking booking) {

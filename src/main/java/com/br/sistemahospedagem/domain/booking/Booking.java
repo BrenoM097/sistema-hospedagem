@@ -51,16 +51,15 @@ public class Booking {
     private Double totalValor;
 
     public Booking(BookingDTO data) {
-        this.firstName = data.firstName();
-        this.lastName = data.lastName();
-        this.email = data.email();
-        this.cpf = data.cpf();
-        this.checkIn = data.checkIn();
-        this.checkOut = data.checkOut();
-        this.parkingLot = data.parkingLot();
-        this.carType = data.carType();
-        this.room = data.room();
-        this.totalValor = data.totalValor();
+        this.firstName = data.getFirstName();
+        this.lastName = data.getLastName();
+        this.email = data.getEmail();
+        this.cpf = data.getCpf();
+        this.checkIn = data.getCheckIn();
+        this.checkOut = data.getCheckOut();
+        this.parkingLot = data.isParkingLot();
+        this.carType = data.getCarType();
+        this.totalValor = data.getTotalValor();
     }
 
 }
