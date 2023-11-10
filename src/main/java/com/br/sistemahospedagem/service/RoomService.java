@@ -11,6 +11,6 @@ public class RoomService {
     RoomRepository repository;
 
     public Room findRoomById(int roomId) {
-        return repository.findRoomById(roomId).orElse(null);
+        return repository.findRoomByid(roomId).orElse(null);
     }
 }

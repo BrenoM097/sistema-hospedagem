@@ -17,10 +17,15 @@ public class BookingService {
 
     public Booking reserve(BookingDTO booking) {
         Room existingRoom = roomService.findRoomById(booking.getRoomId());
+        if(existingRoom == null) {
+            System.out.println("Quarto não encontrado");
+            return null;
+        }
         Booking newReserva = new Booking(booking);
         newReserva.setRoom(existingRoom);
+        newReserva.setTotalValor(getTotalDays(newReserva) * existingRoom.getDailyValor());
         this.saveReserve(newReserva);
-            return newReserva;
+        return newReserva;
     }
 
 
