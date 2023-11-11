@@ -16,5 +16,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>{
     Optional<Booking> findBookingById(Long id);
     @Query("SELECT r FROM bookings_table r WHERE r.checkIn >= :checkIn AND r.checkOut <= :checkOut")
     List<Booking> findBookingsByDates(@Param("checkIn") LocalDate checkIn, @Param("checkOut") LocalDate checkOut);
-    Booking findTopByIdOrderByIdDesc(int roomId);
+    @Query(value = "SELECT * FROM bookings_table WHERE room_id = ?1 ORDER BY booking_id DESC LIMIT 1", nativeQuery = true)
+    Booking findLatestBookingByRoomId(int roomId);
 } 

@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RestController
-@RequestMapping("/hotel")
+@RequestMapping("/hospedagem")
 public class BookingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
 
