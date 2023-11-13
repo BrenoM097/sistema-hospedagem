@@ -1,6 +1,7 @@
 package com.br.sistemahospedagem.domain.booking;
 
 import java.time.LocalDate;
+
 import com.br.sistemahospedagem.domain.room.Room;
 import com.br.sistemahospedagem.dtos.BookingDTO;
 import jakarta.persistence.Column;
@@ -46,11 +47,14 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private CarType carType;
 
+    @Enumerated(EnumType.STRING)
+    private CheckOutTime checkOutTime;
+
     @ManyToOne
     @JoinColumn(name = "room_Id")
     private Room room;
 
-    private Double totalValor;
+    private Double totalValue;
 
     public Booking(BookingDTO data) {
         this.firstName = data.getFirstName();
@@ -61,7 +65,8 @@ public class Booking {
         this.checkOut = data.getCheckOut();
         this.parkingLot = data.isParkingLot();
         this.carType = data.getCarType();
-        this.totalValor = data.getTotalValor();
+        this.totalValue = data.getTotalValue();
+        this.checkOutTime = data.getCheckOutTime();
     }
 
 }

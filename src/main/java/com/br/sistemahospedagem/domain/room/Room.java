@@ -1,5 +1,7 @@
 package com.br.sistemahospedagem.domain.room;
 
+import com.br.sistemahospedagem.dtos.RoomDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,6 +27,14 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private BedType bedType;
     private boolean haveArConditioner;
-    private Double dailyValor;
+    private Double dailyValue;
+
+    public Room(RoomDTO data) {
+        this.adults = data.adults();
+        this.floor = data.floor();
+        this.bedType = data.bedType();
+        this.haveArConditioner = data.haveArConditioner();
+        this.dailyValue = data.dailyValue();
+    }
 
 }

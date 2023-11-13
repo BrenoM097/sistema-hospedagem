@@ -23,7 +23,7 @@ public class BookingService {
         }
         Booking newReserva = new Booking(booking);
         newReserva.setRoom(existingRoom);
-        newReserva.setTotalValor(getTotalDays(newReserva) * existingRoom.getDailyValor());
+        newReserva.setTotalValue(getTotalDays(newReserva) * existingRoom.getDailyValue());
         this.saveReserve(newReserva);
         return newReserva;
     }

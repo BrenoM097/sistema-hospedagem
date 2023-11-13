@@ -2,6 +2,10 @@ package com.br.sistemahospedagem.dtos;
 
 import java.time.LocalDate;
 import com.br.sistemahospedagem.domain.booking.CarType;
+import com.br.sistemahospedagem.domain.booking.CheckOutTime;
+
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +23,8 @@ public class BookingDTO {
     private boolean parkingLot;
     private CarType carType;
     private int roomId;
-    private Double totalValor;
+    private Double totalValue;
+    @Enumerated(EnumType.STRING)
+    private CheckOutTime checkOutTime;
 
 }
