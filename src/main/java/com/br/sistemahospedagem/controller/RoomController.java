@@ -1,5 +1,6 @@
 package com.br.sistemahospedagem.controller;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class RoomController {
     @Autowired
     RoomService roomService;
     
-    @GetMapping
+    @GetMapping("checkRoom")
     public ResponseEntity<CustomResponse> isThisRoomAvailable(@RequestParam("room_id")int roomId) {
         CustomResponse customResponse = new CustomResponse();
         Booking lastestBookingByRoomId = bookingRepository.findLatestBookingByRoomId(roomId);
@@ -37,7 +38,7 @@ public class RoomController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
        }
 
-       boolean available = roomService.checkAvailability(lastestBookingByRoomId);
+       boolean available = roomService.checkAvailabilityOfRoom(lastestBookingByRoomId);
        if(available) {
         customResponse.setMessage("DISPONIVEL/" + lastestBookingByRoomId.getCheckOut());
        }else {
@@ -53,6 +54,12 @@ public class RoomController {
         Room newRoom = new Room(room);
         roomService.saveNewRoom(newRoom);
         return new ResponseEntity<>(newRoom, HttpStatus.CREATED);
+    }
+
+    @GetMapping("availableRooms")
+    public ResponseEntity<List<Room>> availableRooms() {
+        List<Room> allAvailableRooms = roomService.getAllAvailableRooms();
+        return new ResponseEntity<>(allAvailableRooms, HttpStatus.OK);
     }
     
     

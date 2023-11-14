@@ -5,16 +5,23 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.br.sistemahospedagem.domain.booking.Booking;
 import com.br.sistemahospedagem.domain.room.Room;
+import com.br.sistemahospedagem.exceptions.RoomNotFoundException;
+import com.br.sistemahospedagem.repositories.BookingRepository;
 import com.br.sistemahospedagem.repositories.RoomRepository;
 
 @Service
 public class RoomService {
     @Autowired
     RoomRepository repository;
+
+    @Autowired
+    BookingRepository bookingRepository;
 
     public Room findRoomById(int roomId) {
         return repository.findRoomByid(roomId).orElse(null);
@@ -24,8 +31,8 @@ public class RoomService {
         repository.save(newRoom);
     }
 
-    public boolean checkAvailability(Booking lastestBookingByRoomId) {
-        String checkOutTime = lastestBookingByRoomId.getCheckOutTime().name();
+    public boolean checkAvailabilityOfRoom(Booking bookingRoom) {
+        String checkOutTime = bookingRoom.getCheckOutTime().name();
         int checkOut = 0;
         if (checkOutTime.equals("MEIODIA")) {
             checkOut = 12;
@@ -34,7 +41,7 @@ public class RoomService {
         } else if (checkOutTime.equals("NOITE")) {
             checkOut = 22;
         }
-        LocalDate checkOutDate = lastestBookingByRoomId.getCheckOut();
+        LocalDate checkOutDate = bookingRoom.getCheckOut();
 
         ZonedDateTime now = Instant.now().atZone(ZoneId.systemDefault());
         ZonedDateTime currentDate = ZonedDateTime.now(ZoneId.systemDefault()); 
@@ -42,11 +49,26 @@ public class RoomService {
         LocalTime currentTime = now.toLocalTime();
         LocalTime checkOutHour = LocalTime.of(checkOut, 0);
 
-        boolean hourValid = currentTime.isAfter(checkOutHour);
-        boolean dateValid = currentLocalDate.isAfter(checkOutDate);
+        boolean dateValid = currentLocalDate.isAfter(checkOutDate) || 
+                        (currentLocalDate.isEqual(checkOutDate) && currentTime.isAfter(checkOutHour));
         
-        if(dateValid && hourValid) return true;
+        return dateValid;
+    }
 
-        return false;
+    public List<Room> getAllAvailableRooms() {
+        List<Room> allRooms = repository.findAll();
+        List<Room> allAvaiableRooms = new ArrayList<>();
+       
+        for(Room room : allRooms) {
+            Booking lastestBookingByRoomId = bookingRepository.findLatestBookingByRoomId(room.getId());
+            boolean available = checkAvailabilityOfRoom(lastestBookingByRoomId);
+            if(available) {
+                allAvaiableRooms.add(room);
+            }
+        }
+        if(!allAvaiableRooms.isEmpty()) {
+            return allAvaiableRooms;
+        }
+        throw new RoomNotFoundException("Nenhum quarto foi encontrado");
     }
 }
