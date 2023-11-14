@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.br.sistemahospedagem.domain.booking.Booking;
 import com.br.sistemahospedagem.domain.room.Room;
 import com.br.sistemahospedagem.dtos.RoomDTO;
-import com.br.sistemahospedagem.repositories.BookingRepository;
+import com.br.sistemahospedagem.service.BookingService;
 import com.br.sistemahospedagem.service.RoomService;
 
 @RestController
@@ -24,7 +24,7 @@ public class RoomController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
      
     @Autowired
-    BookingRepository bookingRepository;
+    BookingService bookingService;
 
     @Autowired
     RoomService roomService;
@@ -32,13 +32,13 @@ public class RoomController {
     @GetMapping("checkRoom")
     public ResponseEntity<CustomResponse> isThisRoomAvailable(@RequestParam("room_id")int roomId) {
         CustomResponse customResponse = new CustomResponse();
-        Booking lastestBookingByRoomId = bookingRepository.findLatestBookingByRoomId(roomId);
+        Booking lastestBookingByRoomId = bookingService.findLatestBookingByRoomId(roomId);
        
        if(lastestBookingByRoomId == null) {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
        }
 
-       boolean available = roomService.checkAvailabilityOfRoom(lastestBookingByRoomId);
+       boolean available = roomService.isRoomAvailable(lastestBookingByRoomId);
        if(available) {
         customResponse.setMessage("DISPONIVEL/" + lastestBookingByRoomId.getCheckOut());
        }else {

@@ -44,4 +44,9 @@ public class BookingService {
         return dias;
     }
 
+
+    public Booking findLatestBookingByRoomId(int roomId) {
+        return bookingRepository.findLatestBookingByRoomId(roomId);
+    }
+
 }
