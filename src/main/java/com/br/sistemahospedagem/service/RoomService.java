@@ -46,10 +46,7 @@ public class RoomService {
             checkOutHour = 22;
         }
 
-        // Obtenção do horário atual utilizando a classe ZonedDateTime
         ZonedDateTime currentDateTime = ZonedDateTime.now(ZoneId.systemDefault());
-
-        // Verificação do horário de check-out considerando a data e hora atual
         ZonedDateTime checkOutDateTime = checkOutDate.atTime(checkOutHour, 0).atZone(ZoneId.systemDefault());
 
         return currentDateTime.isAfter(checkOutDateTime) || currentDateTime.isEqual(checkOutDateTime);

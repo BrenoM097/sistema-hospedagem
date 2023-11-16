@@ -29,6 +29,7 @@ public class RoomController {
     @Autowired
     RoomService roomService;
     
+    //Método para checar se determinado quarto está disponível
     @GetMapping("checkRoom")
     public ResponseEntity<CustomResponse> isThisRoomAvailable(@RequestParam("room_id")int roomId) {
         CustomResponse customResponse = new CustomResponse();
@@ -47,6 +48,7 @@ public class RoomController {
        return new ResponseEntity<>(customResponse, HttpStatus.OK);
     }
 
+    //Método para cadastrar um novo quarto
     @PostMapping("/newRoom")
     public ResponseEntity<Room> createRoom(@RequestBody RoomDTO room) {
         LOGGER.info("Received new room request: {}", room);
@@ -56,6 +58,7 @@ public class RoomController {
         return new ResponseEntity<>(newRoom, HttpStatus.CREATED);
     }
 
+    //Método que lista todos os quartos disponíveis
     @GetMapping("availableRooms")
     public ResponseEntity<List<Room>> availableRooms() {
         List<Room> allAvailableRooms = roomService.getAllAvailableRooms();

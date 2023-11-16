@@ -30,6 +30,7 @@ public class BookingController {
     @Autowired
     BookingRepository bookingRepository;
     
+    //Método para criar uma nova reserva de quarto
     @PostMapping("/createBooking")
     public ResponseEntity<Booking> reserve(@RequestBody BookingDTO booking) {
         LOGGER.info("Received booking request: {}", booking);
@@ -38,8 +39,9 @@ public class BookingController {
         return new ResponseEntity<>(newBooking, HttpStatus.CREATED);
     }
 
+    //Método para checar reservas entre um determinado intervalo de datas
     @GetMapping("/date")
-    public ResponseEntity<List<Booking>> reserveInBetween(@RequestParam("checkIn") LocalDate checkIn, @RequestParam("checkOut") LocalDate checkOut) {
+    public ResponseEntity<List<Booking>> reservesInBetweenDates(@RequestParam("checkIn") LocalDate checkIn, @RequestParam("checkOut") LocalDate checkOut) {
         LOGGER.info("Received dates request: {}", checkIn, checkOut);
 
         List<Booking> bookingBetweenDates = bookingRepository.findBookingsByDates(checkIn, checkOut);
