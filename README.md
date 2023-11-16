@@ -2,7 +2,7 @@
 
 <div align="center">
 	<p>
-		<b>Um sistema de reserva de quartos para hoteis e pousadas</b>
+		<b>Um sistema completo para hoteis e pousadas e outros tipos de hospedagens</b>
 	</p>
 </div>
 
