@@ -2,7 +2,9 @@ package com.br.sistemahospedagem.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.br.sistemahospedagem.config.StatusEmail;
 import com.br.sistemahospedagem.domain.booking.Booking;
+import com.br.sistemahospedagem.domain.email.EmailModel;
 import com.br.sistemahospedagem.domain.room.Room;
 import com.br.sistemahospedagem.dtos.BookingDTO;
 import com.br.sistemahospedagem.exceptions.RoomNotFoundException;
@@ -12,6 +14,9 @@ import com.br.sistemahospedagem.repositories.BookingRepository;
 public class BookingService {
     @Autowired
     RoomService roomService;
+
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     BookingRepository bookingRepository;
@@ -25,21 +30,20 @@ public class BookingService {
         Booking newReserva = new Booking(booking);
         newReserva.setRoom(existingRoom);
         newReserva.setTotalValue(getTotalDays(newReserva) * existingRoom.getDailyValue());
+        enviarEmailReservaConfirmada(newReserva);
+        System.out.println("Email enviado com sucesso!");
+        newReserva.setStatusEmail(StatusEmail.SENT);
         this.saveReserve(newReserva);
+        
         return newReserva;
     }
 
 
-    public void saveReserve(Booking booking) {
+    private void saveReserve(Booking booking) {
         this.bookingRepository.save(booking);
     }
 
-
-    public Double calcValor(Double value, int days) {
-        return days * value;
-    }
-
-    public int getTotalDays(Booking booking) {
+    private int getTotalDays(Booking booking) {
         int dias = booking.getCheckOut().getDayOfMonth() - booking.getCheckIn().getDayOfMonth();
         return dias;
     }
@@ -48,5 +52,16 @@ public class BookingService {
     public Booking findLatestBookingByRoomId(int roomId) {
         return bookingRepository.findLatestBookingByRoomId(roomId);
     }
+
+   private void enviarEmailReservaConfirmada(Booking booking) {
+    EmailModel emailModel = new EmailModel();
+    emailModel.setEmailTo(booking.getEmail());
+    emailModel.setSubject("Reserva feita com sucesso! Hospedagem agradece sua preferência");
+    emailModel.setText("Sr(a) " + booking.getFirstName() + ", reserva confirmada com sucesso com a data de chegada " + booking.getCheckIn() +
+            " e data de saída " + booking.getCheckOut() + ". Aproveite nossa comodidade!");
+
+    // Aqui, você chama o serviço de e-mail para enviar o e-mail
+    emailService.sendEmail(emailModel);
+}
 
 }

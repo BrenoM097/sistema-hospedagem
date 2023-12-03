@@ -2,6 +2,7 @@ package com.br.sistemahospedagem.domain.booking;
 
 import java.time.LocalDate;
 
+import com.br.sistemahospedagem.config.StatusEmail;
 import com.br.sistemahospedagem.domain.room.Room;
 import com.br.sistemahospedagem.dtos.BookingDTO;
 import jakarta.persistence.Column;
@@ -55,6 +56,8 @@ public class Booking {
     private Room room;
 
     private Double totalValue;
+
+    private StatusEmail statusEmail;
 
     public Booking(BookingDTO data) {
         this.firstName = data.getFirstName();
