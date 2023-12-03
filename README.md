@@ -22,7 +22,7 @@ Um sistema com objetivo de facilitar o gerenciamento de uma hospedagem por meio 
 
 #### Hosted Server Configurations
 
-Futuramente o sistema tem o objetivo de ser hospedagem em algum serviço Cloud, tendo a necessidade apenas de um usuário para acessar.
+Futuramente o sistema tem o objetivo de ser hospedado em algum serviço Cloud, tendo a necessidade apenas de um usuário para acessar.
 
 #### Local Server Configurations
 
