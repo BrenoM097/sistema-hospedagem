@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Modelo de E-mail</title>
+</head>
+<body>
+    <h2>Olá, <span th:text="${firstName}">Usuário</span>!</h2>
+    <p>Este é um exemplo de e-mail com Thymeleaf.</p>
+    <p>Detalhes da reserva:</p>
+    <p>Data de chegada: <span th:text="${checkIn}">xx/xx/xxxx</span></p>
+    <p>Data de saída: <span th:text="${checkOut}">xx/xx/xxxx</span></p>
+</body>
+</html>

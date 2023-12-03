@@ -57,11 +57,10 @@ public class BookingService {
     EmailModel emailModel = new EmailModel();
     emailModel.setEmailTo(booking.getEmail());
     emailModel.setSubject("Reserva feita com sucesso! Hospedagem agradece sua preferência");
-    emailModel.setText("Sr(a) " + booking.getFirstName() + ", reserva confirmada com sucesso com a data de chegada " + booking.getCheckIn() +
-            " e data de saída " + booking.getCheckOut() + ". Aproveite nossa comodidade!");
+    emailModel.setText(emailService.processEmailTemplate(booking.getFirstName(), booking.getCheckIn(), booking.getCheckOut()));
 
-    // Aqui, você chama o serviço de e-mail para enviar o e-mail
     emailService.sendEmail(emailModel);
 }
+
 
 }

@@ -13,9 +13,9 @@ public class EmailModel {
     private LocalDateTime sendDateEmail;
     private StatusEmail statusEmail;
 
-    // Construtor padrão
+    
     public EmailModel() {
-        this.emailFrom = "melobreno89@gmail.com"; // Removido do construtor
-        this.sendDateEmail = LocalDateTime.now(); // Definido no construtor
+        this.emailFrom = "melobreno89@gmail.com"; 
+        this.sendDateEmail = LocalDateTime.now(); 
     }
 }

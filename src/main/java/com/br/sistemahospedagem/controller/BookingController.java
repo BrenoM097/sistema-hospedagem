@@ -25,7 +25,7 @@ public class BookingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
 
     @Autowired
-    BookingService clienteService;
+    BookingService bookingService;
 
     @Autowired
     BookingRepository bookingRepository;
@@ -35,7 +35,7 @@ public class BookingController {
     public ResponseEntity<Booking> reserve(@RequestBody BookingDTO booking) {
         LOGGER.info("Received booking request: {}", booking);
 
-        Booking newBooking = clienteService.reserve(booking);  
+        Booking newBooking = bookingService.reserve(booking);  
         return new ResponseEntity<>(newBooking, HttpStatus.CREATED);
     }
 
