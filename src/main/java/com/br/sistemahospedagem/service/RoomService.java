@@ -66,7 +66,7 @@ public class RoomService {
         if(!allAvaiableRooms.isEmpty()) {
             return allAvaiableRooms;
         }
-        System.out.println("Nenhum quarto encontrado");
+        System.out.println("Todos quartos ocupados.");
         return new ArrayList<>();
     }
 }
