@@ -1,6 +1,9 @@
 package com.br.sistemahospedagem.controller;
 
 import java.util.List;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +23,21 @@ import com.br.sistemahospedagem.service.RoomService;
 
 @RestController
 @RequestMapping("/rooms")
+@Api("Controlador para requisições sobre quartos")
 public class RoomController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
      
+    private final BookingService bookingService;
+    private final RoomService roomService;
     @Autowired
-    BookingService bookingService;
-
-    @Autowired
-    RoomService roomService;
+    public RoomController(BookingService bookingService, RoomService roomService) {
+        this.bookingService = bookingService;
+        this.roomService = roomService;
+    }
     
     //Método para checar se determinado quarto está disponível
     @GetMapping("checkRoom")
+    @ApiOperation("Operação que consiste em consultar se um quarto em especifico está disponivel com base em um ID")
     public ResponseEntity<CustomResponse> isThisRoomAvailable(@RequestParam("room_id")int roomId) {
         CustomResponse customResponse = new CustomResponse();
         Booking lastestBookingByRoomId = bookingService.findLatestBookingByRoomId(roomId);
@@ -39,7 +46,7 @@ public class RoomController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
        }
 
-       boolean available = roomService.isRoomAvailable(lastestBookingByRoomId);
+       boolean available = roomService.isThisRoomAvailable(lastestBookingByRoomId);
        if(available) {
         customResponse.setMessage("DISPONIVEL/" + lastestBookingByRoomId.getCheckOut());
        }else {
@@ -50,6 +57,7 @@ public class RoomController {
 
     //Método para cadastrar um novo quarto
     @PostMapping("/newRoom")
+    @ApiOperation("Operação que consiste em cadastrar um novo quarto")
     public ResponseEntity<Room> createRoom(@RequestBody RoomDTO room) {
         LOGGER.info("Received new room request: {}", room);
 
@@ -59,6 +67,7 @@ public class RoomController {
     }
 
     //Método que lista todos os quartos disponíveis
+    @ApiOperation("Operação que consiste em consultar todos os quartos disponiveis")
     @GetMapping("availableRooms")
     public ResponseEntity<List<Room>> availableRooms() {
         List<Room> allAvailableRooms = roomService.getAllAvailableRooms();

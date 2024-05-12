@@ -1,48 +1,42 @@
 package com.br.sistemahospedagem.domain.booking;
 
-import java.time.LocalDate;
-
 import com.br.sistemahospedagem.config.StatusEmail;
 import com.br.sistemahospedagem.domain.room.Room;
 import com.br.sistemahospedagem.dtos.BookingDTO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.DynamicUpdate;
+
+import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity(name = "bookings_table")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@DynamicUpdate
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
     private Long id;
 
-    @Column(name = "firstName")
+    @Column(name = "first_name")
     private String firstName;
     private String lastName;
     private String email;
     private String cpf;
 
-    @Column(name = "checkIn")
+    @Column(name = "check_in")
     private LocalDate checkIn;
-    @Column(name = "checkOut")
+    @Column(name = "check_out")
     private LocalDate checkOut;
-    @Column(name = "parkingLot")
+    @Column(name = "parking_lot")
     private boolean parkingLot;
     
     @Enumerated(EnumType.STRING)
@@ -60,6 +54,7 @@ public class Booking {
     private StatusEmail statusEmail;
 
     public Booking(BookingDTO data) {
+        this.id = data.getId();
         this.firstName = data.getFirstName();
         this.lastName = data.getLastName();
         this.email = data.getEmail();
@@ -72,4 +67,16 @@ public class Booking {
         this.checkOutTime = data.getCheckOutTime();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Booking booking = (Booking) o;
+        return id != null && Objects.equals(id, booking.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

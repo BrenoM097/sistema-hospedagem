@@ -1,5 +1,6 @@
 package com.br.sistemahospedagem.service;
 
+import com.br.sistemahospedagem.controller.CustomResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.br.sistemahospedagem.config.StatusEmail;
@@ -9,6 +10,11 @@ import com.br.sistemahospedagem.domain.room.Room;
 import com.br.sistemahospedagem.dtos.BookingDTO;
 import com.br.sistemahospedagem.exceptions.RoomNotFoundException;
 import com.br.sistemahospedagem.repositories.BookingRepository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookingService {
@@ -38,20 +44,40 @@ public class BookingService {
         return newReserva;
     }
 
+    @Transactional
+    public CustomResponse updateReserve(BookingDTO booking) {
+        boolean availableRoom = roomService.isThisRoomAvailable(this.findLatestBookingByRoomId(booking.getRoomId()));
+        if(!availableRoom) {
+            return new CustomResponse("Quarto selecionado indisponivel");
+        } else if(booking.getRoomId() != 0) {
+            int totalDays = getTotalDays(booking);
+            Room existingRoom = roomService.findRoomById(booking.getRoomId());
+            Double totalValue = totalDays * existingRoom.getDailyValue();
+        }
+
+        bookingRepository.updateBooking(booking.getId(), booking.getFirstName(), booking.getLastName(), booking.getEmail(), booking.getCpf(), booking.getCheckIn(), booking.getCheckOut(), booking.isParkingLot(), booking.getCarType().toString(), booking.getCheckOutTime().toString(), booking.getRoomId());
+        return new CustomResponse("Alteração feita com sucesso!");
+    }
 
     private void saveReserve(Booking booking) {
         this.bookingRepository.save(booking);
     }
 
     private int getTotalDays(Booking booking) {
-        int dias = booking.getCheckOut().getDayOfMonth() - booking.getCheckIn().getDayOfMonth();
-        return dias;
+        return booking.getCheckOut().getDayOfMonth() - booking.getCheckIn().getDayOfMonth();
     }
 
+    private int getTotalDays(BookingDTO booking) {
+        return booking.getCheckOut().getDayOfMonth() - booking.getCheckIn().getDayOfMonth();
+    }
 
     public Booking findLatestBookingByRoomId(int roomId) {
         return bookingRepository.findLatestBookingByRoomId(roomId);
     }
+
+    public Optional<Booking> findBookingById(Long id){ return bookingRepository.findBookingById(id); }
+
+    public List<Booking> findAll() { return  bookingRepository.findAll(); }
 
    private void enviarEmailReservaConfirmada(Booking booking) {
     EmailModel emailModel = new EmailModel();
@@ -63,4 +89,7 @@ public class BookingService {
 }
 
 
+    public List<Booking> findBookingsByDates(LocalDate checkIn, LocalDate checkOut) {
+        return bookingRepository.findBookingsByDates(checkIn, checkOut);
+    }
 }

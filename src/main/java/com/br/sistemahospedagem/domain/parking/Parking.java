@@ -4,12 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity(name = "parkings_table")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Parking {
@@ -17,11 +16,11 @@ public class Parking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int carSpaces = 30;
-    private int totalSpaces = 39;
-    private Double valorDiaria = 20.0;
-    private int vanSpaces = 5;
-    private int microSpaces = 3;
-    private int busSpace = 1;
-   
+    private int carSpaces;
+    private int totalSpaces;
+    private Double valorDiaria;
+    private int vanSpaces;
+    private int microSpaces;
+    private int busSpace;
+
 }

@@ -29,7 +29,7 @@ public class RoomService {
         repository.save(newRoom);
     }
 
-    public boolean isRoomAvailable(Booking latestBooking) {
+    public boolean isThisRoomAvailable(Booking latestBooking) {
     if (latestBooking == null) {
             return true; // Se não houver reservas anteriores, o quarto está disponível
         }
@@ -58,7 +58,7 @@ public class RoomService {
        
         for(Room room : allRooms) {
             Booking lastestBookingByRoomId = bookingRepository.findLatestBookingByRoomId(room.getId());
-            boolean available = isRoomAvailable(lastestBookingByRoomId);
+            boolean available = isThisRoomAvailable(lastestBookingByRoomId);
             if(available) {
                 allAvaiableRooms.add(room);
             }

@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpServerErrorException;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +52,7 @@ class RoomControllerTest {
         mockedBooking.setCheckOut(LocalDate.of(2023,12,31)); // Defina um check-out simulado para o objeto Booking
 
         when(bookingService.findLatestBookingByRoomId(roomId)).thenReturn(mockedBooking);
-        when(roomService.isRoomAvailable(mockedBooking)).thenReturn(true);
+        when(roomService.isThisRoomAvailable(mockedBooking)).thenReturn(true);
 
         ResponseEntity<CustomResponse> responseEntity = roomController.isThisRoomAvailable(roomId);
         LOGGER.info("Retorno do teste mockado: " + responseEntity);
@@ -69,7 +68,7 @@ class RoomControllerTest {
         mockedBooking.setCheckOut(LocalDate.of(2023,12,31)); // Defina um check-out simulado para o objeto Booking
 
         when(bookingService.findLatestBookingByRoomId(roomId)).thenReturn(mockedBooking);
-        when(roomService.isRoomAvailable(mockedBooking)).thenReturn(false);
+        when(roomService.isThisRoomAvailable(mockedBooking)).thenReturn(false);
 
         ResponseEntity<CustomResponse> responseEntity = roomController.isThisRoomAvailable(roomId);
 
