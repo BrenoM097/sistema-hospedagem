@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import com.br.sistemahospedagem.config.StatusEmail;
+import com.br.sistemahospedagem.domain.email.StatusEmail;
 import com.br.sistemahospedagem.domain.email.EmailModel;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -22,7 +22,7 @@ public class EmailService {
     @Autowired
     private TemplateEngine templateEngine;
 
-    public void sendEmail(EmailModel emailModel) {
+    public StatusEmail sendEmail(EmailModel emailModel) {
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -34,9 +34,11 @@ public class EmailService {
 
             emailSender.send(message);
             emailModel.setStatusEmail(StatusEmail.SENT);
+            return emailModel.getStatusEmail();
         } catch (MessagingException | MailException e) {
             System.out.println(e);
             emailModel.setStatusEmail(StatusEmail.ERROR);
+            return emailModel.getStatusEmail();
         }
     }
 

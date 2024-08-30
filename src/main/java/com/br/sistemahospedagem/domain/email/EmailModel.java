@@ -1,7 +1,7 @@
 package com.br.sistemahospedagem.domain.email;
 
 import java.time.LocalDateTime;
-import com.br.sistemahospedagem.config.StatusEmail;
+
 import lombok.Data;
 
 @Data
@@ -13,7 +13,6 @@ public class EmailModel {
     private LocalDateTime sendDateEmail;
     private StatusEmail statusEmail;
 
-    
     public EmailModel() {
         this.emailFrom = "melobreno89@gmail.com"; 
         this.sendDateEmail = LocalDateTime.now(); 

@@ -1,9 +1,10 @@
 package com.br.sistemahospedagem.service;
 
 import com.br.sistemahospedagem.controller.CustomResponse;
+import com.br.sistemahospedagem.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.br.sistemahospedagem.config.StatusEmail;
+import com.br.sistemahospedagem.domain.email.StatusEmail;
 import com.br.sistemahospedagem.domain.booking.Booking;
 import com.br.sistemahospedagem.domain.email.EmailModel;
 import com.br.sistemahospedagem.domain.room.Room;
@@ -18,25 +19,35 @@ import java.util.Optional;
 
 @Service
 public class BookingService {
-    @Autowired
     RoomService roomService;
-
-    @Autowired
     EmailService emailService;
-
-    @Autowired
     BookingRepository bookingRepository;
+    UserService userService;
+    public BookingService(@Autowired BookingRepository bookingRepository, @Autowired EmailService emailService, @Autowired RoomService roomService, @Autowired UserService userService) {
+        this.bookingRepository = bookingRepository;
+        this.emailService = emailService;
+        this.roomService = roomService;
+        this.userService = userService;
+    }
 
     public Booking reserve(BookingDTO booking) {
         Room existingRoom = roomService.findRoomById(booking.getRoomId());
+        User user = userService.findUserById(booking.getUserId());
         if(existingRoom == null) {
             throw new RoomNotFoundException("Quarto não encontrado");
         }
 
         Booking newReserva = new Booking(booking);
         newReserva.setRoom(existingRoom);
+        newReserva.setUser(user);
         newReserva.setTotalValue(getTotalDays(newReserva) * existingRoom.getDailyValue());
-        enviarEmailReservaConfirmada(newReserva);
+
+        if(!enviarEmailReservaConfirmada(newReserva)) {
+            System.out.println("Falha ao enviar o email");
+            newReserva.setStatusEmail(StatusEmail.ERROR);
+            this.saveReserve(newReserva);
+            return newReserva;
+        }
         System.out.println("Email enviado com sucesso!");
         newReserva.setStatusEmail(StatusEmail.SENT);
         this.saveReserve(newReserva);
@@ -79,16 +90,15 @@ public class BookingService {
 
     public List<Booking> findAll() { return  bookingRepository.findAll(); }
 
-   private void enviarEmailReservaConfirmada(Booking booking) {
+   private boolean enviarEmailReservaConfirmada(Booking booking) {
     EmailModel emailModel = new EmailModel();
-    emailModel.setEmailTo(booking.getEmail());
+    emailModel.setEmailTo(booking.getUser().getEmail());
     emailModel.setSubject("Reserva feita com sucesso! Hospedagem agradece sua preferência");
-    emailModel.setText(emailService.processEmailTemplate(booking.getFirstName(), booking.getCheckIn(), booking.getCheckOut()));
+    emailModel.setText(emailService.processEmailTemplate(booking.getUser().getFirstName(), booking.getCheckIn(), booking.getCheckOut()));
 
-    emailService.sendEmail(emailModel);
-}
-
-
+    StatusEmail statusEmail = emailService.sendEmail(emailModel);
+       return statusEmail.compareTo(StatusEmail.ERROR) != 0;
+   }
     public List<Booking> findBookingsByDates(LocalDate checkIn, LocalDate checkOut) {
         return bookingRepository.findBookingsByDates(checkIn, checkOut);
     }

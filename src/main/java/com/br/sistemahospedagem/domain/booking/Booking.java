@@ -1,7 +1,8 @@
 package com.br.sistemahospedagem.domain.booking;
 
-import com.br.sistemahospedagem.config.StatusEmail;
+import com.br.sistemahospedagem.domain.email.StatusEmail;
 import com.br.sistemahospedagem.domain.room.Room;
+import com.br.sistemahospedagem.domain.user.User;
 import com.br.sistemahospedagem.dtos.BookingDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,12 +26,9 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
     private Long id;
-
-    @Column(name = "first_name")
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String cpf;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "check_in")
     private LocalDate checkIn;
@@ -38,27 +36,18 @@ public class Booking {
     private LocalDate checkOut;
     @Column(name = "parking_lot")
     private boolean parkingLot;
-    
     @Enumerated(EnumType.STRING)
     private CarType carType;
-
     @Enumerated(EnumType.STRING)
     private CheckOutTime checkOutTime;
-
     @ManyToOne
-    @JoinColumn(name = "room_Id")
+    @JoinColumn(name = "room_Id", nullable = false)
     private Room room;
-
     private Double totalValue;
-
     private StatusEmail statusEmail;
 
     public Booking(BookingDTO data) {
         this.id = data.getId();
-        this.firstName = data.getFirstName();
-        this.lastName = data.getLastName();
-        this.email = data.getEmail();
-        this.cpf = data.getCpf();
         this.checkIn = data.getCheckIn();
         this.checkOut = data.getCheckOut();
         this.parkingLot = data.isParkingLot();
