@@ -1,9 +1,9 @@
 package com.br.sistemahospedagem.controller;
 
-import com.br.sistemahospedagem.domain.booking.Booking;
-import com.br.sistemahospedagem.domain.room.BedType;
-import com.br.sistemahospedagem.domain.room.Room;
-import com.br.sistemahospedagem.dtos.RoomDTO;
+import com.br.sistemahospedagem.infra.schemas.booking.BookingModel;
+import com.br.sistemahospedagem.infra.schemas.room.BedType;
+import com.br.sistemahospedagem.infra.schemas.room.RoomSchema;
+import com.br.sistemahospedagem.dtos.request.RoomDTO;
 import com.br.sistemahospedagem.service.BookingService;
 import com.br.sistemahospedagem.service.RoomService;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,11 +48,11 @@ class RoomControllerTest {
     void testIsThisRoomAvailableWhenAvailable() {
         int roomId = 1; // Define o ID do quarto para teste
 
-        Booking mockedBooking = new Booking(); // Crie um objeto Booking simulado
-        mockedBooking.setCheckOut(LocalDate.of(2023,12,31)); // Defina um check-out simulado para o objeto Booking
+        BookingModel mockedBookingModel = new BookingModel(); // Crie um objeto Booking simulado
+        mockedBookingModel.setCheckOut(LocalDate.of(2023,12,31)); // Defina um check-out simulado para o objeto Booking
 
-        when(bookingService.findLatestBookingByRoomId(roomId)).thenReturn(mockedBooking);
-        when(roomService.isThisRoomAvailable(mockedBooking)).thenReturn(true);
+        when(bookingService.findLatestBookingByRoomId(roomId)).thenReturn(mockedBookingModel);
+        when(roomService.isThisRoomAvailable(mockedBookingModel)).thenReturn(true);
 
         ResponseEntity<CustomResponse> responseEntity = roomController.isThisRoomAvailable(roomId);
         LOGGER.info("Retorno do teste mockado: " + responseEntity);
@@ -64,11 +64,11 @@ class RoomControllerTest {
     void testIsThisRoomAvailableWhenNotAvailable() {
         int roomId = 1; // Define o ID do quarto para teste
 
-        Booking mockedBooking = new Booking(); // Crie um objeto Booking simulado
-        mockedBooking.setCheckOut(LocalDate.of(2023,12,31)); // Defina um check-out simulado para o objeto Booking
+        BookingModel mockedBookingModel = new BookingModel(); // Crie um objeto Booking simulado
+        mockedBookingModel.setCheckOut(LocalDate.of(2023,12,31)); // Defina um check-out simulado para o objeto Booking
 
-        when(bookingService.findLatestBookingByRoomId(roomId)).thenReturn(mockedBooking);
-        when(roomService.isThisRoomAvailable(mockedBooking)).thenReturn(false);
+        when(bookingService.findLatestBookingByRoomId(roomId)).thenReturn(mockedBookingModel);
+        when(roomService.isThisRoomAvailable(mockedBookingModel)).thenReturn(false);
 
         ResponseEntity<CustomResponse> responseEntity = roomController.isThisRoomAvailable(roomId);
 
@@ -91,7 +91,7 @@ class RoomControllerTest {
     @DisplayName("Deve cadastrar um novo quarto com sucesso")
     void testCreateRoomSuccess() {
         RoomDTO roomDTO = new RoomDTO(2, 2, BedType.DOUBLE, false, 30.0);
-        Room newRoom = new Room(roomDTO);
+        RoomSchema newRoom = new RoomSchema(roomDTO);
         roomController.createRoom(roomDTO);
 
         // Verifica se o método saveNewRoom do serviço foi chamado exatamente uma vez com o quarto correto
@@ -114,10 +114,10 @@ class RoomControllerTest {
 
         RoomDTO roomDTO = new RoomDTO(2, 2, BedType.DOUBLE, false, 30.0);
         RoomDTO roomDTO2 = new RoomDTO(3, 1, BedType.DOUBLE, true, 70.0);
-        Room newRoom = new Room(roomDTO);
-        Room newRoom2 = new Room(roomDTO2);
+        RoomSchema newRoom = new RoomSchema(roomDTO);
+        RoomSchema newRoom2 = new RoomSchema(roomDTO2);
 
-        List<Room> mockAvailableRooms = Arrays.asList(
+        List<RoomSchema> mockAvailableRooms = Arrays.asList(
                 newRoom,
                 newRoom2
         );
@@ -125,7 +125,7 @@ class RoomControllerTest {
         // Configurar comportamento do mock do RoomService
         when(roomService.getAllAvailableRooms()).thenReturn(mockAvailableRooms);
 
-        ResponseEntity<List<Room>> responseEntity = roomController.availableRooms();
+        ResponseEntity<List<RoomSchema>> responseEntity = roomController.availableRooms();
 
         // Verificar se o método do RoomService foi chamado
         verify(roomService).getAllAvailableRooms();
@@ -142,7 +142,7 @@ class RoomControllerTest {
         // Configurar comportamento do mock do RoomService
         when(roomService.getAllAvailableRooms()).thenReturn(new ArrayList<>());
 
-        ResponseEntity<List<Room>> responseEntity = roomController.availableRooms();
+        ResponseEntity<List<RoomSchema>> responseEntity = roomController.availableRooms();
 
         // Verificar se o método do RoomService foi chamado
         verify(roomService).getAllAvailableRooms();

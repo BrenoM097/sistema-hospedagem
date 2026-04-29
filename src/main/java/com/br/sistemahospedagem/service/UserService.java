@@ -1,9 +1,8 @@
 package com.br.sistemahospedagem.service;
 
-import com.br.sistemahospedagem.domain.user.User;
-import com.br.sistemahospedagem.dtos.UserDTO;
+import com.br.sistemahospedagem.infra.schemas.user.UserModel;
+import com.br.sistemahospedagem.dtos.request.UserRequestDTO;
 import com.br.sistemahospedagem.repositories.UserRepository;
-import com.br.sistemahospedagem.security.Crypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,18 +16,18 @@ public class UserService {
     public UserService(@Autowired UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    public User saveUser(UserDTO user) {
+    public UserModel saveUser(UserRequestDTO user) {
         String encodedPass = new BCryptPasswordEncoder().encode(user.getPassword());
-        User newUser = new User(user);
+        UserModel newUser = new UserModel(user);
         newUser.setPassword(encodedPass);
         return userRepository.save(newUser);
     }
 
-    public List<User> findAll() {
+    public List<UserModel> findAll() {
         return userRepository.findAll();
     }
 
-    public User findUserById(int id) {
+    public UserModel findUserById(int id) {
         return userRepository.findById(id).orElse(null);
     }
 

@@ -1,7 +1,7 @@
 package com.br.sistemahospedagem.controller;
 
-import com.br.sistemahospedagem.domain.booking.Booking;
-import com.br.sistemahospedagem.dtos.BookingDTO;
+import com.br.sistemahospedagem.infra.schemas.booking.BookingModel;
+import com.br.sistemahospedagem.dtos.request.BookingRequestDTO;
 import com.br.sistemahospedagem.repositories.BookingRepository;
 import com.br.sistemahospedagem.service.BookingService;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,32 +35,32 @@ class BookingControllerTest {
     @Test
     @DisplayName("Deve cadastrar uma nova reserva com sucesso")
     void testeReserveWithSuccessful() {
-        BookingDTO mockedBooking = new BookingDTO();
-        Booking booking = new Booking(mockedBooking);
+        BookingRequestDTO mockedBooking = new BookingRequestDTO();
+        BookingModel bookingModel = new BookingModel(mockedBooking);
 
-        when(bookingService.reserve(mockedBooking)).thenReturn(booking);
-        Booking reserve = bookingService.reserve(mockedBooking);
+        when(bookingService.reserve(mockedBooking)).thenReturn(bookingModel);
+        BookingModel reserve = bookingService.reserve(mockedBooking);
 
         //Verificando se o metodo bookingService foi chamado apenas uma vez
         verify(bookingService, times(1));
         //Verificando se o booking passando é igual ao booking salvo
-        assertEquals(reserve, booking, "A resposta não contém a reserva esperada");
+        assertEquals(reserve, bookingModel, "A resposta não contém a reserva esperada");
     }
 
     @Test
     @DisplayName("Não deve cadastrar uma nova reserva com sucesso")
     void testeReserveWithFailure() {
-        BookingDTO mockedBooking = new BookingDTO();
-        Booking booking = new Booking(mockedBooking);
+        BookingRequestDTO mockedBooking = new BookingRequestDTO();
+        BookingModel bookingModel = new BookingModel(mockedBooking);
 
-        when(bookingService.reserve(mockedBooking)).thenReturn(any(Booking.class));
-        Booking reserve = bookingService.reserve(mockedBooking);
+        when(bookingService.reserve(mockedBooking)).thenReturn(any(BookingModel.class));
+        BookingModel reserve = bookingService.reserve(mockedBooking);
 
         //Verificando se a classe bookingService foi chamado apenas uma vez
         verify(bookingService, times(1));
 
         //Verificando se o booking passando NÃO é igual ao booking salvo
-        assertNotEquals(reserve, booking, "A reserva cadastrada não é a mesma esperada");
+        assertNotEquals(reserve, bookingModel, "A reserva cadastrada não é a mesma esperada");
     }
 
     @Test
@@ -68,23 +68,23 @@ class BookingControllerTest {
         LocalDate checkIn = LocalDate.of(2023, 11, 14);
         LocalDate checkOut = LocalDate.of(2023, 11, 18);
 
-        Booking mockedBooking = new Booking();
-        mockedBooking.setCheckIn(checkIn);
-        mockedBooking.setCheckOut(checkOut);
+        BookingModel mockedBookingModel = new BookingModel();
+        mockedBookingModel.setCheckIn(checkIn);
+        mockedBookingModel.setCheckOut(checkOut);
 
-        List<Booking> allBookings = new ArrayList<>();
-        allBookings.add(mockedBooking);
+        List<BookingModel> allBookingEntities = new ArrayList<>();
+        allBookingEntities.add(mockedBookingModel);
 
-        when(bookingRepository.findBookingsByDates(checkIn, checkOut)).thenReturn(allBookings);
+        when(bookingRepository.findBookingsByDates(checkIn, checkOut)).thenReturn(allBookingEntities);
 
-        List<Booking> bookingsResponse = bookingRepository.findBookingsByDates(checkIn, checkOut);
+        List<BookingModel> bookingsResponse = bookingRepository.findBookingsByDates(checkIn, checkOut);
 
         //Verificando se a classe bookingRepository foi chamada apenas uma vez
         verify(bookingRepository, times(1));
 
         //Verifica se a lista com o objeto mockado é igual ao retorno do metodo
-        assertEquals(allBookings, bookingsResponse);
+        assertEquals(allBookingEntities, bookingsResponse);
         //Verifica se a resposta usando o metodo contém a reserva determinada
-        assertTrue(bookingsResponse.contains(mockedBooking));
+        assertTrue(bookingsResponse.contains(mockedBookingModel));
     }
 }

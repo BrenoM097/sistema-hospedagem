@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.br.sistemahospedagem.domain.booking.Booking;
-import com.br.sistemahospedagem.domain.room.Room;
-import com.br.sistemahospedagem.dtos.RoomDTO;
+import com.br.sistemahospedagem.infra.schemas.booking.BookingModel;
+import com.br.sistemahospedagem.infra.schemas.room.RoomSchema;
+import com.br.sistemahospedagem.dtos.request.RoomDTO;
 import com.br.sistemahospedagem.service.BookingService;
 import com.br.sistemahospedagem.service.RoomService;
 
@@ -40,17 +40,17 @@ public class RoomController {
     @ApiOperation("Operação que consiste em consultar se um quarto em especifico está disponivel com base em um ID")
     public ResponseEntity<CustomResponse> isThisRoomAvailable(@RequestParam("room_id")int roomId) {
         CustomResponse customResponse = new CustomResponse();
-        Booking lastestBookingByRoomId = bookingService.findLatestBookingByRoomId(roomId);
+        BookingModel lastestBookingModelByRoomId = bookingService.findLatestBookingByRoomId(roomId);
        
-       if(lastestBookingByRoomId == null) {
+       if(lastestBookingModelByRoomId == null) {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
        }
 
-       boolean available = roomService.isThisRoomAvailable(lastestBookingByRoomId);
+       boolean available = roomService.isThisRoomAvailable(lastestBookingModelByRoomId);
        if(available) {
-        customResponse.setMessage("DISPONIVEL/" + lastestBookingByRoomId.getCheckOut());
+        customResponse.setMessage("DISPONIVEL/" + lastestBookingModelByRoomId.getCheckOut());
        }else {
-        customResponse.setMessage("INDISPONIVEL/" + lastestBookingByRoomId.getCheckOut());
+        customResponse.setMessage("INDISPONIVEL/" + lastestBookingModelByRoomId.getCheckOut());
        }
        return new ResponseEntity<>(customResponse, HttpStatus.OK);
     }
@@ -58,10 +58,10 @@ public class RoomController {
     //Método para cadastrar um novo quarto
     @PostMapping("/newRoom")
     @ApiOperation("Operação que consiste em cadastrar um novo quarto")
-    public ResponseEntity<Room> createRoom(@RequestBody RoomDTO room) {
+    public ResponseEntity<RoomSchema> createRoom(@RequestBody RoomDTO room) {
         LOGGER.info("Received new room request: {}", room);
 
-        Room newRoom = new Room(room);
+        RoomSchema newRoom = new RoomSchema(room);
         roomService.saveNewRoom(newRoom);
         return new ResponseEntity<>(newRoom, HttpStatus.CREATED);
     }
@@ -69,8 +69,8 @@ public class RoomController {
     //Método que lista todos os quartos disponíveis
     @ApiOperation("Operação que consiste em consultar todos os quartos disponiveis")
     @GetMapping("availableRooms")
-    public ResponseEntity<List<Room>> availableRooms() {
-        List<Room> allAvailableRooms = roomService.getAllAvailableRooms();
+    public ResponseEntity<List<RoomSchema>> availableRooms() {
+        List<RoomSchema> allAvailableRooms = roomService.getAllAvailableRooms();
         return new ResponseEntity<>(allAvailableRooms, HttpStatus.OK);
     }
     

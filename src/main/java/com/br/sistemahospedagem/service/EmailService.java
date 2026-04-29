@@ -8,8 +8,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import com.br.sistemahospedagem.domain.email.StatusEmail;
-import com.br.sistemahospedagem.domain.email.EmailModel;
+import com.br.sistemahospedagem.infra.schemas.email.StatusEmail;
+import com.br.sistemahospedagem.infra.schemas.email.EmailModel;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 

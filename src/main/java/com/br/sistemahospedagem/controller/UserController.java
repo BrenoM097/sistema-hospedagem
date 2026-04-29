@@ -1,7 +1,7 @@
 package com.br.sistemahospedagem.controller;
 
-import com.br.sistemahospedagem.domain.user.User;
-import com.br.sistemahospedagem.dtos.UserDTO;
+import com.br.sistemahospedagem.infra.schemas.user.UserModel;
+import com.br.sistemahospedagem.dtos.request.UserRequestDTO;
 import com.br.sistemahospedagem.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,9 +27,9 @@ public class UserController {
     }
     @ApiOperation("Cadastrar novo usuário")
     @PostMapping("register")
-    public ResponseEntity<User> createUser(@RequestBody @Valid UserDTO user) {
+    public ResponseEntity<UserModel> createUser(@RequestBody @Valid UserRequestDTO user) {
         LOGGER.info("Received user data: {}", user);
-        User newUser = userService.saveUser(user);
+        UserModel newUser = userService.saveUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 }

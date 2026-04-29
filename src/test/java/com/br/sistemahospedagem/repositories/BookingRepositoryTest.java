@@ -1,14 +1,14 @@
 package com.br.sistemahospedagem.repositories;
 
-import com.br.sistemahospedagem.domain.room.BedType;
-import com.br.sistemahospedagem.domain.room.Room;
+import com.br.sistemahospedagem.infra.schemas.room.BedType;
+import com.br.sistemahospedagem.infra.schemas.room.RoomSchema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import com.br.sistemahospedagem.domain.booking.Booking;
+import com.br.sistemahospedagem.infra.schemas.booking.BookingModel;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -36,22 +36,22 @@ class BookingRepositoryTest {
         LocalDate checkIn = LocalDate.of(2023, 11, 14);
         LocalDate checkOut = LocalDate.of(2023, 11, 18);
 
-        Booking mockedBooking = new Booking();
-        mockedBooking.setCheckIn(checkIn);
-        mockedBooking.setCheckOut(checkOut);
+        BookingModel mockedBookingModel = new BookingModel();
+        mockedBookingModel.setCheckIn(checkIn);
+        mockedBookingModel.setCheckOut(checkOut);
 
-        List<Booking> result = Collections.singletonList(mockedBooking);
+        List<BookingModel> result = Collections.singletonList(mockedBookingModel);
 
         LOGGER.info("Executando o teste com checkIn: " + checkIn + " e checkOut: " + checkOut);
 
         // Configurando o mock para retornar a lista result quando o método é chamado
         when(bookingRepository.findBookingsByDates(checkIn, checkOut)).thenReturn(result);
 
-        List<Booking> bookings = bookingRepository.findBookingsByDates(checkIn, checkOut);
+        List<BookingModel> bookingEntities = bookingRepository.findBookingsByDates(checkIn, checkOut);
 
-        LOGGER.info("Número de reservas encontradas: " + bookings.size());
+        LOGGER.info("Número de reservas encontradas: " + bookingEntities.size());
 
-        assertThat(bookings).isNotEmpty().contains(mockedBooking);
+        assertThat(bookingEntities).isNotEmpty().contains(mockedBookingModel);
     }
 
     @Test
@@ -61,16 +61,16 @@ class BookingRepositoryTest {
         LocalDate checkOut = LocalDate.of(2023, 11, 18);
 
         //Lista vazia simulando a não ocorrência de nenhuma reserva entre as datas estabelecidas
-        List<Booking> result = Collections.emptyList();
+        List<BookingModel> result = Collections.emptyList();
 
         LOGGER.info("Executando o teste com checkIn: " + checkIn + " e checkOut: " + checkOut);
 
         // Configurando o mock para retornar a lista result quando o método é chamado
         when(bookingRepository.findBookingsByDates(checkIn, checkOut)).thenReturn(result);
 
-        List<Booking> bookings = bookingRepository.findBookingsByDates(checkIn, checkOut);
+        List<BookingModel> bookingEntities = bookingRepository.findBookingsByDates(checkIn, checkOut);
 
-        assertThat(bookings).isEmpty();
+        assertThat(bookingEntities).isEmpty();
     }
 
     @Test
@@ -79,12 +79,12 @@ class BookingRepositoryTest {
         int roomId = 2;
         LOGGER.info("Executando o teste com o id de quarto: " + roomId);
 
-        Room mockedRoom = new Room(roomId, 2, 2, BedType.DOUBLE, false, 30.0);
-        Booking mockedBooking = new Booking();
-        mockedBooking.setRoom(mockedRoom);
+        RoomSchema mockedRoom = new RoomSchema(roomId, 2, 2, BedType.DOUBLE, false, 30.0);
+        BookingModel mockedBookingModel = new BookingModel();
+        mockedBookingModel.setRoom(mockedRoom);
 
-        when(bookingRepository.findLatestBookingByRoomId(roomId)).thenReturn(mockedBooking);
-        Booking result = bookingRepository.findLatestBookingByRoomId(roomId);
+        when(bookingRepository.findLatestBookingByRoomId(roomId)).thenReturn(mockedBookingModel);
+        BookingModel result = bookingRepository.findLatestBookingByRoomId(roomId);
 
         assertThat(result)
                 .as("Verifica se a reserva encontrada não é nula")
@@ -101,7 +101,7 @@ class BookingRepositoryTest {
         LOGGER.info("Executando o teste com o id de quarto: " + roomId);
 
         when(bookingRepository.findLatestBookingByRoomId(roomId)).thenReturn(null);
-        Booking result = bookingRepository.findLatestBookingByRoomId(roomId);
+        BookingModel result = bookingRepository.findLatestBookingByRoomId(roomId);
 
         assertThat(result)
                 .as("Verifica se a reserva encontrada é nula")
